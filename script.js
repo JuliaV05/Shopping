@@ -4,6 +4,7 @@
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 
 const sectionItems = document.querySelector('.items');
+const olCartItems = document.querySelector('.cart__items');
 
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
@@ -30,7 +31,20 @@ const createCustomElement = (element, className, innerText) => {
   e.innerText = innerText;
   return e;
 };
-
+ const cartItemClickListener = () => {
+// 
+ };
+const createCartItemElement = ({ id, title, price }) => {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+};
+const addCartItem = async (id) => {
+ const product = await fetchItem(id);
+ olCartItems.appendChild(createCartItemElement(product));
+};
 /**
  * Função responsável por criar e retornar o elemento do produto.
  * @param {Object} product - Objeto do produto. 
@@ -46,7 +60,9 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   section.appendChild(createCustomElement('span', 'item_id', id));
   section.appendChild(createCustomElement('span', 'item__title', title));
   section.appendChild(createProductImageElement(thumbnail));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  const buttonCartItem = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
+  buttonCartItem.addEventListener('click', () => addCartItem(id));
+  section.appendChild(buttonCartItem);
 
   return section;
 };
@@ -66,15 +82,8 @@ const getIdFromProductItem = (product) => product.querySelector('span.id').inner
  * @param {string} product.price - Preço do produto.
  * @returns {Element} Elemento de um item do carrinho.
  */
-const createCartItemElement = ({ id, title, price }) => {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-};
 
-window.onload = async () => { 
+window.onload = async () => {
   const products = await fetchProducts();
   products.results.forEach((product) => {
     sectionItems.appendChild(createProductItemElement(product));
