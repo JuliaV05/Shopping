@@ -28,7 +28,7 @@ describe('2 - Teste a função fetchItem', () => {
   })
 
   it('Verifica se ao chamar a função fetchItem() sem argumento, retorna um erro com a mensagem "You must provide an url"', async () => {
-    try {
+   try {
       throw (fetchItem);
   } catch(e) {
       console.log('You must provide an url');
