@@ -36,10 +36,12 @@ total += item.price;
 totalPrice.innerText = total;
 };
  
-const buttonEmpty = (cart) => {
-  cart.remove();
+const buttonEmpty = () => {
+olCartItems.innerHTML = '';
+localStorage.removeItem('cartItems');
 totalNewSon();
 };
+buttonEmptyCart.addEventListener('click', buttonEmpty);
  
 const createCustomElement = (element, className, innerText) => {
   const e = document.createElement(element);
