@@ -1,6 +1,5 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
-
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 
 const sectionItems = document.querySelector('.items');
@@ -31,19 +30,36 @@ const createCustomElement = (element, className, innerText) => {
   e.innerText = innerText;
   return e;
 };
- const cartItemClickListener = () => {
-// 
- };
+ const cartItemClickListener = (event, id) => {
+ event.target.remove();
+ const getSaved = JSON.parse(getSavedCartItems()); 
+ const indexCart = getSaved.findIndex((cart) => cart.id === id);
+ getSaved.splice(indexCart, 1);
+ saveCartItems(JSON.stringify(getSaved));
+};
+
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', (event) => cartItemClickListener(event, id));
   return li;
 };
+
+const addCartItemLocalStorage = (product) => {
+ if (localStorage.cartItems) {
+  const getSavedCart = JSON.parse(getSavedCartItems());
+  getSavedCart.push(product);
+  saveCartItems(JSON.stringify(getSavedCart));
+ } else {
+  saveCartItems(JSON.stringify([product]));
+ }
+};
+
 const addCartItem = async (id) => {
  const product = await fetchItem(id);
  olCartItems.appendChild(createCartItemElement(product));
+ addCartItemLocalStorage(product);
 };
 /**
  * Função responsável por criar e retornar o elemento do produto.
@@ -88,4 +104,10 @@ window.onload = async () => {
   products.results.forEach((product) => {
     sectionItems.appendChild(createProductItemElement(product));
   });
+  if (localStorage.cartItems) {
+  const getSavedCart = JSON.parse(getSavedCartItems());
+  getSavedCart.forEach((item) => {
+    olCartItems.appendChild(createCartItemElement(item));
+  });
+  }
 };
