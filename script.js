@@ -4,6 +4,8 @@
 
 const sectionItems = document.querySelector('.items');
 const olCartItems = document.querySelector('.cart__items');
+const buttonEmptyCart = document.querySelector('.empty-cart');
+const totalPrice = document.querySelector('.total-price');
 
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
@@ -24,6 +26,21 @@ const createProductImageElement = (imageSource) => {
  * @param {string} innerText - Texto do elemento.
  * @returns {Element} Elemento criado.
  */
+
+const totalNewSon = () => {
+const allItemsCart = document.querySelectorAll('.cart__item');
+let total = 0;
+allItemsCart.forEach((item) => {
+total += item.price;
+});
+totalPrice.innerText = total;
+};
+ 
+const buttonEmpty = (cart) => {
+  cart.remove();
+totalNewSon();
+};
+ 
 const createCustomElement = (element, className, innerText) => {
   const e = document.createElement(element);
   e.className = className;
@@ -36,11 +53,13 @@ const createCustomElement = (element, className, innerText) => {
  const indexCart = getSaved.findIndex((cart) => cart.id === id);
  getSaved.splice(indexCart, 1);
  saveCartItems(JSON.stringify(getSaved));
+ totalNewSon();
 };
 
 const createCartItemElement = ({ id, title, price }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  li.price = price;
   li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
   li.addEventListener('click', (event) => cartItemClickListener(event, id));
   return li;
@@ -60,6 +79,7 @@ const addCartItem = async (id) => {
  const product = await fetchItem(id);
  olCartItems.appendChild(createCartItemElement(product));
  addCartItemLocalStorage(product);
+ totalNewSon();
 };
 /**
  * Função responsável por criar e retornar o elemento do produto.
@@ -110,4 +130,5 @@ window.onload = async () => {
     olCartItems.appendChild(createCartItemElement(item));
   });
   }
+  totalNewSon();
 };
