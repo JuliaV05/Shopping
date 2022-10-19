@@ -27,6 +27,18 @@ const createProductImageElement = (imageSource) => {
  * @returns {Element} Elemento criado.
  */
 
+const renderedMessage = (parent) => {
+const load = parent.querySelector('.loading');
+load.remove();
+};
+
+const renderMessage = (parent) => {
+const load = document.createElement('span');
+load.className = 'loading';
+load.innerHTML = 'carregando...';
+parent.appendChild(load);
+};
+
 const totalNewSon = () => {
 const allItemsCart = document.querySelectorAll('.cart__item');
 let total = 0;
@@ -78,7 +90,9 @@ const addCartItemLocalStorage = (product) => {
 };
 
 const addCartItem = async (id) => {
+  renderMessage(olCartItems);
  const product = await fetchItem(id);
+  renderedMessage(olCartItems);
  olCartItems.appendChild(createCartItemElement(product));
  addCartItemLocalStorage(product);
  totalNewSon();
@@ -122,7 +136,9 @@ const getIdFromProductItem = (product) => product.querySelector('span.id').inner
  */
 
 window.onload = async () => {
+  renderMessage(sectionItems);
   const products = await fetchProducts();
+  renderedMessage(sectionItems);
   products.results.forEach((product) => {
     sectionItems.appendChild(createProductItemElement(product));
   });
