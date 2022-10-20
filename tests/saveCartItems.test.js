@@ -15,7 +15,7 @@ it('Verifica se ao executar saveCartItems() com o argumento  "cartItem", o méto
   expect.assertions(1);
  await saveCartItems('cartItem')
 
- expect(localStorage.setItem('cartItems', 'cartItem')).toBe('cartItems', 'cartItem');
+ expect(localStorage.setItem).toHaveBeenCalledWith('cartItems', 'cartItem');
 }) 
 
 });
